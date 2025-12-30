@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hustle Mxde Project</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            font-family: 'Segoe UI', sans-serif; background: #000;
+        }
+
+        /* Общий фон */
+        .main-wrapper {
+            display: flex; width: 200vw; height: 100vh;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                              url('https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?q=80&w=2000'); /* Замени на свою картинку */
+            background-size: cover; background-position: center;
+        }
+
+        section { width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; }
+
+        /* --- АНИМАЦИЯ ВЕТРА ДЛЯ ШАРА --- */
+        @keyframes windSwing {
+            0% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            100% { transform: rotate(-5deg); }
+        }
+
+        .ball-container {
+            position: absolute; top: -10px; right: 15%;
+            display: flex; flex-direction: column; align-items: center;
+            cursor: pointer; z-index: 100;
+            transform-origin: top center;
+            animation: windSwing 6s ease-in-out infinite; /* Шатается в такт ветру */
+        }
+
+        .string { width: 2px; height: 140px; background: rgba(255,255,255,0.5); }
+        
+        .hustle-ball {
+            width: 110px; height: 110px;
+            background: linear-gradient(135deg, #a855f7, #6d28d9);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 11px; font-weight: bold; text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset -5px -5px 15px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: 0.3s;
+        }
+
+        /* --- СНЕГ С ЭФФЕКТОМ ВЕТРА --- */
+        .snowflake {
+            position: fixed; top: -10%; background: white;
+            border-radius: 50%; opacity: 0.8; pointer-events: none;
+            animation: fall linear infinite, wind 6s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(110vh); }
+        }
+
+        /* Плавное изменение стороны падения (ветер) */
+        @keyframes wind {
+            0% { margin-left: -20px; }
+            50% { margin-left: 20px; }
+            100% { margin-left: -20px; }
+        }
+
+        /* Карточки */
+        .card, .social-card {
+            background: rgba(20, 10, 35, 0.85); 
+            padding: 40px; border-radius: 30px; width: 85%; max-width: 350px;
+            text-align: center; backdrop-filter: blur(10px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .btn {
+            display: block; width: 100%; padding: 16px; margin-bottom: 12px;
+            border-radius: 15px; font-weight: bold; border: none;
+            cursor: pointer; text-decoration: none; box-sizing: border-box;
+            transition: 0.3s; color: white;
+        }
+
+        #sendBtn { background: #9d4edd; }
+        .btn-tg { background: #229ED9; }
+        .btn-twitch { background: #9146FF; }
+        .btn-discord { background: #5865F2; }
+        .btn-outline { border: 2px solid #9d4edd; color: #d8b4fe; background: transparent; }
+
+        #status { margin-top: 10px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div id="snow"></div>
+
+<div class="main-wrapper" id="slider">
+    <section>
+        <div class="ball-container" onclick="goToMenu()">
+            <div class="string"></div>
+            <div class="hustle-ball">HUSTLE_MXDE<br>меню</div>
+        </div>
+
+        <div class="card">
+            <h2 style="color:#f3ebff">🚀 Предложка</h2>
+            <p style="color:#b199da; font-size: 14px;">Отправляй контент в канал</p>
+            
+            <label for="fileInput" style="display:block; background:#331e58; padding:15px; border-radius:12px; border:2px dashed #9d4edd; color:#d8b4fe; margin-bottom:20px; cursor:pointer;" id="fileName">Выбрать файл</label>
+            <input type="file" id="fileInput" accept="image/*,video/*" style="display:none">
+
+            <button id="sendBtn" class="btn">Отправить в TG</button>
+            <button class="btn btn-outline" onclick="goToMenu()">Наши соцсети</button>
+            <div id="status"></div>
+        </div>
+    </section>
+
+    <section>
+        <div class="social-card">
+            <div style="color: #d8b4fe; cursor: pointer; margin-bottom: 20px;" onclick="goToHome()">← Назад</div>
+            <h2 style="color:#f3ebff; margin-bottom:25px;">Hustle Mxde Links</h2>
+            
+            <a href="https://t.me/+rs6moWWzko04NWUy" target="_blank" class="btn btn-tg">hustle_mxde tg</a>
+            <a href="https://www.twitch.tv/hustle_mxde" target="_blank" class="btn btn-twitch">Hustle_mxde twitch</a>
+            <a href="https://discord.com/users/302835378589794306" target="_blank" class="btn btn-discord">Hustle_mxde discord</a>
+        </div>
+    </section>
+</div>
+
+<script>
+    function goToMenu() { document.getElementById('slider').style.transform = 'translateX(-100vw)'; }
+    function goToHome() { document.getElementById('slider').style.transform = 'translateX(0)'; }
+
+    // Генерация снега с разной скоростью для глубины
+    const snowContainer = document.getElementById('snow');
+    for (let i = 0; i < 30; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        flake.style.left = Math.random() * 100 + '%';
+        flake.style.width = flake.style.height = Math.random() * 5 + 2 + 'px';
+        flake.style.animationDuration = Math.random() * 5 + 5 + 's, 6s'; // Скорость падения и скорость ветра
+        flake.style.animationDelay = Math.random() * 5 + 's';
+        snowContainer.appendChild(flake);
+    }
+
+    // ТВОИ ДАННЫЕ
+    const botToken = '8235209879:AAH01R29LYmRWEC97Usi85s4UvRbiUp-O-0';
+    const chatId = '-1003426495901';
+
+    const fileInput = document.getElementById('fileInput');
+    const fileName = document.getElementById('fileName');
+    const sendBtn = document.getElementById('sendBtn');
+    const status = document.getElementById('status');
+
+    fileInput.addEventListener('change', () => {
+        if(fileInput.files[0]) fileName.innerText = "📄 " + fileInput.files[0].name;
+    });
+
+    sendBtn.addEventListener('click', async () => {
+        if(!fileInput.files[0]) {
+            status.innerHTML = "<span style='color:#ff5d5d'>❌ Выбери файл</span>";
+            return;
+        }
+        sendBtn.disabled = true;
+        status.innerHTML = "⏳ Отправка...";
+
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('chat_id', chatId);
+        formData.append('caption', 'предложка!');
+        const type = file.type.startsWith('video') ? 'video' : 'photo';
+        formData.append(type, file);
+
+        try {
+            const res = await fetch(`https://api.telegram.org/bot${botToken}/send${type.charAt(0).toUpperCase() + type.slice(1)}`, {
+                method: 'POST',
+                body: formData
+            });
+            if(res.ok) {
+                status.innerHTML = "<span style='color:#57cc99'>✅ Опубликовано!</span>";
+                fileInput.value = ""; fileName.innerText = "Выбрать файл";
+            } else {
+                status.innerHTML = "<span style='color:#ff5d5d'>❌ Ошибка</span>";
+            }
+        } catch (e) {
+            status.innerHTML = "❌ Ошибка сети";
+        } finally {
+            sendBtn.disabled = false;
+        }
+    });
+</script>
+
+</body>
+  </html>
+  
